@@ -1,0 +1,7 @@
+[package]
+name = "exam"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Randy Ridenour"]
+license = "MIT"
+description = "Typeset exams, with matching answer keys, from a shared question data set."

@@ -1,1 +1,133 @@
 A Typst package to produce exams that converts an Emacs Org Mode file to a formatted PDF exam with answer key.
+
+* Overview
+
+Write an exam once, in Org mode, and get two matching PDFs out of it: the
+exam itself, and an answer key with correct multiple-choice answers marked
+and sample essay answers printed in place.
+
+The repository has three parts:
+
+- =typst/= :: a Typst package (=exam=) providing the layout primitives
+  (=exam-doc=, =section=, =mcq=, =essay=) that render a question set either
+  as a blank exam or as a marked-up key.
+- =elisp/ox-exam.el= :: an Emacs Lisp exporter that parses the constrained
+  Org subset described below with =org-element-parse-buffer= and writes
+  Typst source that calls into the package above. It registers a minimal
+  =exam= backend so its commands show up under the export dispatcher
+  (=C-c C-e=).
+- =examples/sample-exam.org= :: a worked example.
+
+* Requirements
+
+- Emacs with Org mode (any reasonably recent Org; developed against Org's
+  built-in =org-element= parser).
+- The [[https://typst.app/][Typst]] CLI, on =PATH=, to compile the generated =.typ= files to PDF.
+
+* Setup
+
+Install the Typst package as a local package so generated files can
+=#import "@local/exam:0.1.0"=:
+
+#+begin_src sh
+make install
+#+end_src
+
+This symlinks =typst/= to Typst's local package directory (=~/Library/Application
+Support/typst/packages/local/exam/0.1.0= on macOS, =$XDG_DATA_HOME/typst/packages/local/exam/0.1.0=
+on Linux). Run =make uninstall= to remove it.
+
+If you'd rather not install the package, set =org-exam-typst-import= (in
+your Emacs config) to a relative path instead, e.g.:
+
+#+begin_src emacs-lisp
+(setq org-exam-typst-import "../typst/lib.typ")
+#+end_src
+
+* Org file format
+
+** Header
+
+Four keywords are required at the top of the file:
+
+#+begin_example
+#+COURSE_NUMBER: MATH 101
+#+COURSE_NAME: Calculus I
+#+EXAM_NAME: Midterm 1
+#+DATE: 2026-07-18
+#+end_example
+
+** Sections
+
+Every level-1 headline is a section (e.g. "Multiple Choice", "Short
+Essay"). Question numbering runs continuously across all sections, not
+per section.
+
+** Multiple choice
+
+A section holds a numbered list. Each top-level item is a question; its
+own numbered sub-list gives the options, in the order they should appear.
+Mark the correct option with a literal trailing =*=:
+
+#+begin_example
+1. This is the first question
+   1. Incorrect option
+   2. Correct option*
+   3. Incorrect option
+   4. Incorrect option
+#+end_example
+
+Exactly one option per question must end in =*=; the exporter raises an
+error if none or more than one does.
+
+** Short essay
+
+An item with no nested list is treated as an essay question. Give it a
+=:SPACE:= property (how much blank writing space to leave on the exam,
+e.g. =2in=, =3.5cm=) and, optionally, an =:ANSWER:= drawer with the text
+to print in the key:
+
+#+begin_example
+1. Explain photosynthesis.
+   :PROPERTIES:
+   :SPACE: 3in
+   :END:
+   :ANSWER:
+   Sunlight is converted into chemical energy in chloroplasts.
+   :END:
+#+end_example
+
+=:SPACE:= is required. =:ANSWER:= is optional — omit it and the key will
+say "(no answer key provided)".
+
+** Inline formatting
+
+=*bold*=, =/italic/=, and =~code~= inside question and option text carry
+through to the Typst output. Everything else is treated as literal text
+(math fragments like =$x^2$= are printed as-is, escaped, rather than
+typeset as math).
+
+* Usage
+
+From within the Org buffer, either use the export dispatcher
+(=C-c C-e X t= for Typst source, =C-c C-e X p= to also compile to PDF), or
+call the commands directly:
+
+- =M-x org-exam-export-to-typst= writes =<name>-exam.typ= and
+  =<name>-key.typ= next to the Org file.
+- =M-x org-exam-export-to-pdf= does the same and then runs =typst
+  compile= on each, producing =<name>-exam.pdf= and =<name>-key.pdf=.
+
+From the command line:
+
+#+begin_src sh
+make pdf FILE=examples/sample-exam.org
+#+end_src
+
+Try it on the bundled example with =make example=.
+
+* Status / future work
+
+Question order in the output always matches the Org source. Generating
+shuffled variants of the same exam (different question/option order, same
+underlying data) is a planned extension, not yet implemented.

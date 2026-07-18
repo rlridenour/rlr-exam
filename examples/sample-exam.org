@@ -1,0 +1,49 @@
+#+COURSE_NUMBER: BIO 101
+#+COURSE_NAME: Introduction to Biology
+#+EXAM_NAME: Midterm Exam
+#+DATE: 2026-07-18
+
+* Multiple Choice
+
+1. Which organelle is the primary site of ATP production in a eukaryotic cell?
+   1. Ribosome
+   2. Golgi apparatus
+   3. Mitochondrion*
+   4. Nucleus
+
+2. The process by which plants convert light energy into chemical energy is called
+   1. Respiration
+   2. Photosynthesis*
+   3. Transpiration
+   4. Fermentation
+
+3. In the equation $C_6H_{12}O_6$, the "6" subscript after C refers to how many what?
+   1. Hydrogen atoms
+   2. Oxygen atoms
+   3. Carbon atoms*
+   4. Electrons
+
+* Short Essay
+
+1. Explain, in your own words, the relationship between mitosis and cell growth. Your answer should mention chromosomes and cell division.
+   :PROPERTIES:
+   :SPACE: 2.5in
+   :END:
+   :ANSWER:
+   Mitosis is the process of nuclear division that produces two genetically
+   identical daughter cells. It allows an organism to grow by increasing its
+   number of cells, replacing damaged or worn-out cells, and enabling asexual
+   reproduction in some organisms. Each daughter cell receives a full,
+   identical set of chromosomes.
+   :END:
+
+2. Compare and contrast /prokaryotic/ and *eukaryotic* cells, giving at least two structural differences.
+   :PROPERTIES:
+   :SPACE: 3.5in
+   :END:
+   :ANSWER:
+   Eukaryotic cells have a membrane-bound nucleus and other membrane-bound
+   organelles (e.g. mitochondria, ~ER~), while prokaryotic cells lack a
+   nucleus and these organelles, with DNA free in the cytoplasm.
+   Eukaryotic cells are also generally larger than prokaryotic cells.
+   :END:
