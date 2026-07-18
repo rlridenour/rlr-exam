@@ -362,17 +362,23 @@ KEY-P non-nil renders the answer key variant."
     (concat (file-name-sans-extension typ-file) ".pdf")))
 
 ;;;###autoload
-(defun org-exam-export-to-typst (&optional _async _subtreep _visible-only)
+(defun org-exam-export-to-typst (&rest _ignore)
   "Export the current Org exam buffer to Typst source.
-Writes <name>-exam.typ and <name>-key.typ next to the Org file."
+Writes <name>-exam.typ and <name>-key.typ next to the Org file.
+
+Takes no meaningful arguments; the dispatcher (`org-export-dispatch')
+calls export actions with (ASYNC SUBTREEP VISIBLE-ONLY BODY-ONLY), none
+of which apply here, so they are all ignored."
   (interactive)
   (let ((files (org-exam--do-export)))
     (message "org-exam: wrote %s" (mapconcat #'file-name-nondirectory files ", "))
     files))
 
 ;;;###autoload
-(defun org-exam-export-to-pdf (&optional _async _subtreep _visible-only)
-  "Export the current Org exam buffer to Typst source and compile it to PDF."
+(defun org-exam-export-to-pdf (&rest _ignore)
+  "Export the current Org exam buffer to Typst source and compile it to PDF.
+
+Takes no meaningful arguments; see `org-exam-export-to-typst' for why."
   (interactive)
   (let* ((typ-files (org-exam--do-export))
          (pdf-files (mapcar #'org-exam--typst-compile typ-files)))
