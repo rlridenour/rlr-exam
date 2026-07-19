@@ -126,8 +126,36 @@ make pdf FILE=examples/sample-exam.org
 
 Try it on the bundled example with =make example=.
 
+** Shuffled versions
+
+To generate several variants of the same exam — same questions, different
+order, with multiple-choice options independently reshuffled per question —
+use =C-c C-e X v= (Typst source) or =C-c C-e X V= (also compiled to PDF),
+or call the commands directly and enter how many versions you want when
+prompted:
+
+- =M-x org-exam-export-versions=
+- =M-x org-exam-export-versions-to-pdf=
+
+Each version gets a letter label (A, B, C, ...) and its own file pair:
+=<name>-A-exam.typ= / =<name>-A-key.typ=, =<name>-B-exam.typ= /
+=<name>-B-key.typ=, and so on. The label is also printed in the exam and
+key headers next to the exam name, so graders can match a paper exam to
+its key. The shuffle is seeded from the file name and version label, so
+re-running the export on an unchanged file reproduces the exact same
+versions — regenerating a lost key later will still match what was handed
+out.
+
+From the command line:
+
+#+begin_src sh
+make versions FILE=examples/sample-exam.org N=3
+make versions-pdf FILE=examples/sample-exam.org N=3
+#+end_src
+
+(=N= defaults to 2 if omitted.)
+
 * Status / future work
 
-Question order in the output always matches the Org source. Generating
-shuffled variants of the same exam (different question/option order, same
-underlying data) is a planned extension, not yet implemented.
+Question order in the output matches the Org source unless you use the
+shuffled-versions commands above.

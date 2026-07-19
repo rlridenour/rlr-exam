@@ -12,6 +12,7 @@
 ///     course-name: "Calculus I",
 ///     exam-name: "Midterm 1",
 ///     date: "2026-07-18",
+///     version: "A",
 ///     key: false,
 ///   )
 ///
@@ -21,6 +22,7 @@
   course-name: "",
   exam-name: "",
   date: "",
+  version: none,
   key: false,
   body,
 ) = {
@@ -37,7 +39,7 @@
     column-gutter: 1em,
     [
       *#course-number* --- #course-name \
-      #exam-name#if key [ --- *Answer Key*] \
+      #exam-name#if version != none [ (Version #version)]#if key [ --- *Answer Key*] \
       #date
     ],
     if key [] else [
