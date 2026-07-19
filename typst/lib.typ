@@ -49,8 +49,7 @@
       )
     ],
   )
-  v(0.3em)
-  line(length: 100%, stroke: 0.6pt)
+
   v(0.8em)
 
   body
