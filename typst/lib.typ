@@ -25,7 +25,7 @@
   body,
 ) = {
   set page(paper: "us-letter", margin: 1in)
-  set text(font: "New Computer Modern", size: 11pt)
+  set text(font: "Libertinus Serif", size: 11pt)
   set par(justify: true)
   set enum(numbering: "1.")
 
@@ -33,7 +33,7 @@
 
   grid(
     columns: (1fr, 1fr),
-    align: (left + top, right + top),
+    align: (left + top, left + top),
     column-gutter: 1em,
     [
       *#course-number* --- #course-name \
@@ -41,7 +41,12 @@
       #date
     ],
     if key [] else [
-      Name: #box(width: 100%, line(length: 100%, stroke: 0.6pt)) \
+      #grid(
+        columns: (auto, 1fr),
+        column-gutter: 0.4em,
+        align: (left + bottom, left + bottom),
+        [Name:], line(length: 100%, stroke: 0.6pt),
+      )
     ],
   )
   v(0.3em)
@@ -66,11 +71,11 @@
 #let mcq(question, options, correct: none, key: false) = {
   question-counter.step()
   let letters = ("A", "B", "C", "D", "E", "F", "G", "H")
-  block(above: 0.9em, below: 0.6em, breakable: false)[
+  block(above: 0.9em, below: 0.16em, breakable: false)[
     #context [*#question-counter.display().*] #question
     #for (i, opt) in options.enumerate() {
       let is-correct = key and correct == i
-      block(inset: (left: 1.7em, top: 0.3em))[
+      block(inset: (left: 1.7em, top: 0.0em))[
         #if is-correct [
           *#letters.at(i)) #opt* #sym.checkmark
         ] else [
