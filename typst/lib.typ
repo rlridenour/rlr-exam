@@ -58,7 +58,11 @@
 }
 
 /// A titled group of questions.
-#let section(title, body) = {
+///
+/// - title: section heading text (string or content)
+/// - page-break: when true, start the section on a fresh page
+#let section(title, page-break: false, body) = {
+  if page-break { pagebreak(weak: true) }
   block(above: 1.2em, below: 0.6em, heading(level: 2, title))
   body
 }
@@ -93,7 +97,9 @@
 /// - space: blank writing space to leave in the exam (a length, e.g. 2in)
 /// - answer: sample-answer text shown only when `key` is true
 /// - key: when true, renders the sample answer instead of blank space
-#let essay(question, space: 2in, answer: none, key: false) = {
+/// - page-break: when true, start the question on a fresh page
+#let essay(question, space: 2in, answer: none, key: false, page-break: false) = {
+  if page-break { pagebreak(weak: true) }
   question-counter.step()
   block(above: 0.9em, below: 0.6em)[
     #context [*#question-counter.display().*] #question

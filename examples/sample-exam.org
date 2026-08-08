@@ -24,6 +24,9 @@
    4. Electrons
 
 * Short Essay
+  :PROPERTIES:
+  :PAGEBREAK: t
+  :END:
 
 1. Explain, in your own words, the relationship between mitosis and cell growth. Your answer should mention chromosomes and cell division.
    :PROPERTIES:
@@ -40,6 +43,7 @@
 2. Compare and contrast /prokaryotic/ and *eukaryotic* cells, giving at least two structural differences.
    :PROPERTIES:
    :SPACE: 3.5in
+   :PAGEBREAK: t
    :END:
    :ANSWER:
    Eukaryotic cells have a membrane-bound nucleus and other membrane-bound

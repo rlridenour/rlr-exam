@@ -63,6 +63,16 @@ Every level-1 headline is a section (e.g. "Multiple Choice", "Short
 Essay"). Question numbering runs continuously across all sections, not
 per section.
 
+To start a section on a fresh page, give its headline a =:PAGEBREAK: t=
+property:
+
+#+begin_example
+* Short Essay
+  :PROPERTIES:
+  :PAGEBREAK: t
+  :END:
+#+end_example
+
 ** Multiple choice
 
 A section holds a numbered list. Each top-level item is a question; its
@@ -99,6 +109,38 @@ to print in the key:
 
 =:SPACE:= is required. =:ANSWER:= is optional — omit it and the key will
 say "(no answer key provided)".
+
+Add =:PAGEBREAK: t= to give a long essay question a page of its own:
+
+#+begin_example
+1. Compare and contrast prokaryotic and eukaryotic cells.
+   :PROPERTIES:
+   :SPACE: 3.5in
+   :PAGEBREAK: t
+   :END:
+#+end_example
+
+** Page breaks
+
+=:PAGEBREAK: t= works on a section headline (start the section on a new
+page) and on an essay question (start that question on a new page).
+Multiple-choice questions don't take one; they're already kept from
+splitting across a page boundary.
+
+The value may be =t=, =true=, =yes=, or =1= — or omitted entirely, since
+=:PAGEBREAK:= on its own counts as true. =nil=, =false=, =no=, and =0=
+turn it off; anything else is an error, so a typo won't be silently
+ignored.
+
+Breaks are honored in the exam only, never in the answer key: they exist
+to give students room to write, and the key has no blank space to pad.
+Consecutive breaks collapse rather than emitting a blank page, so a
+section break followed immediately by a question break costs one page,
+not two.
+
+Under the shuffled-versions commands below, a section break stays with
+its section (sections are never reordered) and a question break travels
+with its question wherever the shuffle moves it.
 
 ** Inline formatting
 
