@@ -60,10 +60,15 @@
 /// A titled group of questions.
 ///
 /// - title: section heading text (string or content)
+/// - instructions: directions to the student, set in italics under the
+///   heading; `none` leaves the heading flush against the first question
 /// - page-break: when true, start the section on a fresh page
-#let section(title, page-break: false, body) = {
+#let section(title, instructions: none, page-break: false, body) = {
   if page-break { pagebreak(weak: true) }
   block(above: 1.2em, below: 0.6em, heading(level: 2, title))
+  if instructions != none {
+    block(above: 0.4em, below: 0.2em, width: 100%, text(style: "italic", instructions))
+  }
   body
 }
 

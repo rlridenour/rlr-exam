@@ -5,6 +5,8 @@
 
 * Multiple Choice
 
+Circle the *best* answer for each question. Two points each.
+
 1. Which organelle is the primary site of ATP production in a eukaryotic cell?
    1. Ribosome
    2. Golgi apparatus
@@ -27,6 +29,9 @@
   :PROPERTIES:
   :PAGEBREAK: t
   :END:
+
+Answer both questions in the space provided. Write in complete sentences;
+you will be graded on clarity as well as accuracy. Ten points each.
 
 1. Explain, in your own words, the relationship between mitosis and cell growth. Your answer should mention chromosomes and cell division.
    :PROPERTIES:

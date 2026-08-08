@@ -63,6 +63,23 @@ Every level-1 headline is a section (e.g. "Multiple Choice", "Short
 Essay"). Question numbering runs continuously across all sections, not
 per section.
 
+Prose between the headline and the question list becomes the section's
+instructions, set in italics under the heading:
+
+#+begin_example
+* Multiple Choice
+
+Circle the *best* answer for each question. Two points each.
+
+1. Which organelle is ...
+#+end_example
+
+Instructions are optional — a section without them puts the first
+question directly under the heading. Inline markup works, and several
+paragraphs stay separate paragraphs. Prose *after* the question list
+belongs to no question and is ignored. Instructions print in both the
+exam and the answer key.
+
 To start a section on a fresh page, give its headline a =:PAGEBREAK: t=
 property:
 

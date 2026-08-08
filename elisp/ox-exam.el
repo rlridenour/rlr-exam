@@ -13,6 +13,9 @@
 ;;   #+DATE: 2026-07-18
 ;;
 ;;   * Multiple Choice
+;;
+;;   Circle the best answer. Two points each.
+;;
 ;;   1. This is the first question
 ;;      1. Incorrect option
 ;;      2. Correct option*
@@ -31,11 +34,13 @@
 ;;      Sunlight is converted into chemical energy.
 ;;      :END:
 ;;
-;; Each level-1 headline is a section.  Items in its top-level list are
-;; either multiple-choice questions (they contain a nested list of options,
-;; the correct one ending in a literal "*") or essay questions (no nested
-;; list; a :SPACE: property gives the blank space to leave on the exam, and
-;; an :ANSWER: drawer gives the text to print in the key).
+;; Each level-1 headline is a section.  Prose between the headline and its
+;; question list becomes the section's instructions, set in italics under
+;; the heading in both the exam and the key.  Items in the top-level list
+;; are either multiple-choice questions (they contain a nested list of
+;; options, the correct one ending in a literal "*") or essay questions (no
+;; nested list; a :SPACE: property gives the blank space to leave on the
+;; exam, and an :ANSWER: drawer gives the text to print in the key).
 ;;
 ;; A :PAGEBREAK: t property on a section headline starts that section on a
 ;; new page; the same property on an essay question starts that question on
@@ -208,13 +213,17 @@ callers can distinguish \"absent\" from \"set but blank\"."
       (when (string-match (format ":%s:[ \t]*\\([^\n]*\\)" (regexp-quote key)) raw)
         (string-trim (match-string-no-properties 1 raw))))))
 
+(defun org-exam--headline-section (headline)
+  "Return the `section' element holding HEADLINE's body, or nil."
+  (seq-find (lambda (el) (eq (org-element-type el) 'section))
+            (org-element-contents headline)))
+
 (defun org-exam--headline-property (headline key)
   "Return the value of node property KEY in HEADLINE's property drawer, or nil.
 Walks the parsed tree rather than calling `org-element-property' with an
 arbitrary uppercase keyword, whose behaviour has shifted across Org
 versions.  A property present with no value yields the empty string."
-  (let* ((section (seq-find (lambda (el) (eq (org-element-type el) 'section))
-                            (org-element-contents headline)))
+  (let* ((section (org-exam--headline-section headline))
          (drawer (and section
                       (seq-find (lambda (el) (eq (org-element-type el) 'property-drawer))
                                 (org-element-contents section))))
@@ -289,11 +298,24 @@ joined with blank lines between paragraphs."
 
 (defun org-exam--top-level-list (headline)
   "Return the top-level `plain-list' directly inside HEADLINE's section, or nil."
-  (let ((section (seq-find (lambda (el) (eq (org-element-type el) 'section))
-                            (org-element-contents headline))))
+  (let ((section (org-exam--headline-section headline)))
     (when section
       (seq-find (lambda (el) (eq (org-element-type el) 'plain-list))
                 (org-element-contents section)))))
+
+(defun org-exam--section-instructions (headline)
+  "Return HEADLINE's instruction text as a Typst markup string, or nil.
+Any paragraphs sitting between the headline and its question list are
+the section's instructions; several are joined as separate paragraphs.
+Prose after the list belongs to no question and is ignored."
+  (let* ((section (org-exam--headline-section headline))
+         (before-list (seq-take-while
+                       (lambda (el) (not (eq (org-element-type el) 'plain-list)))
+                       (org-element-contents section)))
+         (paragraphs (seq-filter (lambda (el) (eq (org-element-type el) 'paragraph))
+                                 before-list))
+         (text (mapconcat #'org-exam--paragraph-to-typst paragraphs "\n\n")))
+    (unless (string-empty-p text) text)))
 
 (defun org-exam--collect-sections (tree)
   "Collect all level-1 headlines in TREE as a list of (:title STR :questions LIST)."
@@ -305,6 +327,7 @@ joined with blank lines between paragraphs."
             (user-error "Section %S has no question list"
                         (org-element-property :raw-value hl)))
           (list :title (org-exam--escape-typst (org-element-property :raw-value hl))
+                :instructions (org-exam--section-instructions hl)
                 :page-break (org-exam--parse-boolean
                              (org-exam--headline-property hl "PAGEBREAK")
                              "PAGEBREAK"
@@ -374,6 +397,7 @@ shuffled into a new order; :correct is updated to match."
 each multiple-choice question's options shuffled (see
 `org-exam--shuffle-question')."
   (list :title (plist-get sec :title)
+        :instructions (plist-get sec :instructions)
         :page-break (plist-get sec :page-break)
         :questions (mapcar #'org-exam--shuffle-question
                             (org-exam--shuffle (plist-get sec :questions)))))
@@ -446,8 +470,12 @@ a version label string (e.g. \"A\") printed in the header."
    (mapconcat
     (lambda (sec)
       (concat
-       (format "#section(%s%s)[\n"
+       (format "#section(%s%s%s)[\n"
                (org-exam--content (plist-get sec :title))
+               (let ((instructions (plist-get sec :instructions)))
+                 (if instructions
+                     (format ", instructions: %s" (org-exam--content instructions))
+                   ""))
                (org-exam--page-break-arg sec key-p))
        (mapconcat (lambda (q) (org-exam--render-question q key-p))
                    (plist-get sec :questions) "")
