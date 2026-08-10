@@ -27,7 +27,7 @@
   body,
 ) = {
   set page(paper: "us-letter", margin: 1in)
-  set text(font: "Libertinus Serif", size: 11pt)
+  set text(font: "Libertinus Serif", size: 10pt)
   set par(justify: true)
   set enum(numbering: "1.")
 
@@ -65,9 +65,9 @@
 /// - page-break: when true, start the section on a fresh page
 #let section(title, instructions: none, page-break: false, body) = {
   if page-break { pagebreak(weak: true) }
-  block(above: 1.2em, below: 0.6em, heading(level: 2, title))
+  block(above: 2em, below: 0.6em, heading(level: 2, title))
   if instructions != none {
-    block(above: 0.4em, below: 0.2em, width: 100%, text(style: "italic", instructions))
+      block(above: 1em, below: 1.5em, width: 100%, text(style: "italic", instructions))
   }
   body
 }
@@ -81,7 +81,7 @@
 #let mcq(question, options, correct: none, key: false) = {
   question-counter.step()
   let letters = ("A", "B", "C", "D", "E", "F", "G", "H")
-  block(above: 0.9em, below: 0.16em, breakable: false)[
+    block(above: 0.9em, below: 1.5em, breakable: false)[
     #context [*#question-counter.display().*] #question
     #for (i, opt) in options.enumerate() {
       let is-correct = key and correct == i
