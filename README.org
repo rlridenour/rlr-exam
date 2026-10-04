@@ -166,6 +166,18 @@ through to the Typst output. Everything else is treated as literal text
 (math fragments like =$x^2$= are printed as-is, escaped, rather than
 typeset as math).
 
+A =\\= at the end of a line forces a line break. For anything else, a
+Typst export snippet passes raw Typst through unescaped (snippets for
+other backends are dropped):
+
+#+begin_example
+1. Cross out nine letters so the remaining letters spell a word. \\
+   N @@typst:#h(0.5em)@@ A @@typst:#h(0.5em)@@ I @@typst:#h(0.5em)@@ S
+   :PROPERTIES:
+   :SPACE: 1in
+   :END:
+#+end_example
+
 * Usage
 
 From within the Org buffer, either use the export dispatcher
